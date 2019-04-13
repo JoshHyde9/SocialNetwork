@@ -11,9 +11,13 @@ if (isset($_POST['login'])) {
 
             $cstrong = true;
             $token = bin2hex(openssl_random_pseudo_bytes(64, $cstrong));
-            
-            $user_id = DB::query('SELECT id FROM users WHERE username=:username')[0]['id'];
-            DB::query('INSERT INTO login_tokens VALUES ('', :token, :user_id)', array(':token' => sha1($token), ':user_id' => $user_id));
+
+            $user_id = DB::query('SELECT id FROM users WHERE username=:username', array(':username' => $username))[0]['id'];
+            DB::query('INSERT INTO login_tokens VALUES (null, :token, :user_id)', array(':token' => sha1($token), ':user_id' => $user_id));
+
+            // Set login token to a cookie
+            setcookie("SNID", $token, time() + 60 * 60 * 24 * 7, '/', null, null, true);
+            setcookie("SNID_", '1', time() + 60 * 60 * 24 * 3, '/', null, null, true);
         } else {
             echo 'Incorrect Password';
         }
@@ -22,6 +26,7 @@ if (isset($_POST['login'])) {
     }
 }
 ?>
+<title>Login</title>
 
 <h1>Login to your account</h1>
 
