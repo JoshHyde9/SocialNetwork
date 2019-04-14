@@ -44,20 +44,24 @@ if (isset($_GET['username'])) {
 
         if (isset($_POST['post'])) {
             $postbody = $_POST['postbody'];
-            $userid = Login::isLoggedIn();
+            $loggedInUserId = Login::isLoggedIn();
 
             if (strlen($postbody) > 200 || strlen($postbody) < 1) {
                 die('Post must be 200 characters or less!');
             }
 
-            DB::query('INSERT INTO posts VALUES (\'\', :postbody, NOW(), :userid, 0)', array(':postbody' => $postbody, ':userid' => $userid));
+            if ($loggedInUserId == $userid) {
+                DB::query('INSERT INTO posts VALUES (\'\', :postbody, NOW(), :userid, 0)', array(':postbody' => $postbody, ':userid' => $userid));
+            } else {
+                die('Incorrect user!');
+            }
         }
 
         $dbposts = DB::query('SELECT * FROM posts WHERE user_id=:userid ORDER BY id DESC', array(':userid' => $userid));
         $posts = "";
 
         foreach ($dbposts as $p) {
-            $posts .= $p['body'] . "<hr /> <br />";
+            $posts .= htmlspecialchars($p['body']) . "<hr /> <br />";
         }
 
     } else {
