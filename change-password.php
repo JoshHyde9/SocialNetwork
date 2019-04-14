@@ -65,9 +65,11 @@ if (Login::isLoggedIn()) {
 }
 ?>
 
+<title>Change your password</title>
+
 <h1>Change your password</h1>
 <form action="<?php if (!$tokenIsValid) {echo 'change-password.php';} else {echo 'change-password.php?token=' . $token . '';}?>" method="post">
-    <?php if (!$tokenIsValid) {echo '<input type="password" name="oldpassword" placeholder="Current Password...."> ';}?>
+    <?php if (!$tokenIsValid) {echo '<input type="password" name="oldpassword" placeholder="Current Password..."> ';}?>
     <input type="password" name="newpassword" placeholder="New Password...">
     <input type="password" name="newpasswordrepeat" placeholder="Repeat New Password...">
     <input type="submit" name="changepassword" value="Change Password">

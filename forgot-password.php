@@ -14,6 +14,8 @@ if (isset($_POST['forgotpassword'])) {
 }
 ?>
 
+<title>Forgot Password?</title>
+
 <h1>Forgot Password?</h1>
 <form action="forgot-password.php" method="post">
     <input type="text" name="email" placeholder="Email...">

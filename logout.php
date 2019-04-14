@@ -19,6 +19,8 @@ if (isset($_POST['confirm'])) {
 }
 ?>
 
+<title>Logout of your account</title>
+
 <h1>Logout of your account</h1>
 <p>Are you sure you want to logout of your account?</p>
 <form action="logout.php" method="post">
