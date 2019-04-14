@@ -2,6 +2,7 @@
 include 'includes/db.inc.php';
 include 'includes/login.inc.php';
 include 'includes/post.inc.php';
+include 'includes/comment.inc.php';
 $showTimeline = false;
 
 if (Login::isLoggedIn()) {
@@ -13,6 +14,10 @@ if (Login::isLoggedIn()) {
 
 if (isset($_GET['postid'])) {
     Post::likePost($_GET['postid'], $userid);
+}
+
+if (isset($_GET['comment'])) {
+    Comment::createComment($_POST['commentbody'], $_GET['postid'], $userid);
 }
 
 $followingPosts = DB::query('SELECT posts.id, posts.body, posts.likes, users.username FROM users, posts, followers
@@ -30,6 +35,10 @@ foreach ($followingPosts as $post) {
         echo "<input type='submit' name='unlike' value='Unlike'>";
     }
     echo "<span>" . $post['likes'] . " Likes</span>
-            </form>
-             <hr /> <br />";
+        <form action='index.php?postid=" . $post['id'] . "' method='post'>
+        <textarea name='commentbody' cols='50' rows='3'></textarea>
+            <input type='submit' name='comment' value='Comment'>
+        </form>
+    </form>
+    <hr /> <br />";
 }

@@ -4,7 +4,7 @@ class Post
     public static function createPost($postbody, $loggedInUserId, $profileUserId)
     {
         if (strlen($postbody) > 200 || strlen($postbody) < 1) {
-            die('Post must be 200 characters or less!');
+            die('Post must be 200 characters long or less!');
         }
 
         if ($loggedInUserId == $profileUserId) {
