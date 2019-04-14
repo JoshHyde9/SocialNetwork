@@ -1,5 +1,5 @@
 <?php
-include 'classes/db.php';
+include 'includes/db.inc.php';
 
 if (isset($_POST['forgotpassword'])) {
     $cstrong = true;

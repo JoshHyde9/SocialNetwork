@@ -1,6 +1,7 @@
 <?php
-include 'classes/db.php';
-include 'classes/Login.php';
+include 'includes/db.inc.php';
+include 'includes/login.inc.php';
+include 'includes/post.inc.php';
 
 $username = "";
 $verified = false;
@@ -43,18 +44,7 @@ if (isset($_GET['username'])) {
         }
 
         if (isset($_POST['post'])) {
-            $postbody = $_POST['postbody'];
-            $loggedInUserId = Login::isLoggedIn();
-
-            if (strlen($postbody) > 200 || strlen($postbody) < 1) {
-                die('Post must be 200 characters or less!');
-            }
-
-            if ($loggedInUserId == $userid) {
-                DB::query('INSERT INTO posts VALUES (\'\', :postbody, NOW(), :userid, 0)', array(':postbody' => $postbody, ':userid' => $userid));
-            } else {
-                die('Incorrect user!');
-            }
+            Post::createPost($_POST['postbody'], Login::isLoggedIn(), $userid);
         }
 
         if (isset($_GET['postid'])) {

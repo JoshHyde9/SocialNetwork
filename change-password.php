@@ -1,6 +1,6 @@
 <?php
-include 'classes/db.php';
-include 'classes/Login.php';
+include 'includes/db.inc.php';
+include 'includes/login.inc.php';
 
 $tokenIsValid = false;
 
