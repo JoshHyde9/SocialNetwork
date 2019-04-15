@@ -33,14 +33,15 @@ class Post
 
         foreach ($dbposts as $p) {
             if (!DB::query('SELECT post_id FROM post_likes WHERE post_id=:postid AND user_id=:userid', array(':postid' => $p['id'], ':userid' => $loggedInUserId))) {
-                $posts .= htmlspecialchars($p['body']) . "
+
+                $posts .= "<img src='" . $p['postimg'] . "'>" . htmlspecialchars($p['body']) . "
                 <form action='profile.php?username=$username&postid=" . $p['id'] . "' method='post'>
                 <input type='submit' name='like' value='Like'>
                 <span>" . $p['likes'] . " Likes</span>
                 </form>
                 <hr /> <br />";
             } else {
-                $posts .= htmlspecialchars($p['body']) . "
+                $posts .= "<img src='" . $p['postimg'] . "'>" . htmlspecialchars($p['body']) . "
                 <form action='profile.php?username=$username&postid=" . $p['id'] . "' method='post'>
                 <input type='submit' name='unlike' value='Unlike'>
                 <span>" . $p['likes'] . " Likes</span>
@@ -49,5 +50,19 @@ class Post
             }
         }
         return $posts;
+    }
+    public static function createImgPost($postbody, $loggedInUserId, $profileUserId)
+    {
+        if (strlen($postbody) > 200) {
+            die('Post must be 200 characters long or less!');
+        }
+
+        if ($loggedInUserId == $profileUserId) {
+            DB::query('INSERT INTO posts VALUES (\'\', :postbody, NOW(), :userid, 0, \'\')', array(':postbody' => $postbody, ':userid' => $profileUserId));
+            $postid = DB::query('SELECT id FROM posts WHERE user_id=:userid ORDER BY ID DESC LIMIT 1;', array(':userid' => $loggedInUserId))['0']['id'];
+            return $postid;
+        } else {
+            die('Incorrect user!');
+        }
     }
 }
