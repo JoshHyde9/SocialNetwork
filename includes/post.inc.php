@@ -8,7 +8,7 @@ class Post
         }
 
         if ($loggedInUserId == $profileUserId) {
-            DB::query('INSERT INTO posts VALUES (\'\', :postbody, NOW(), :userid, 0)', array(':postbody' => $postbody, ':userid' => $profileUserId));
+            DB::query('INSERT INTO posts VALUES (\'\', :postbody, NOW(), :userid, 0, \'\')', array(':postbody' => $postbody, ':userid' => $profileUserId));
         } else {
             die('Incorrect user!');
         }
@@ -25,6 +25,21 @@ class Post
         }
     }
 
+    public static function linkAdd($text)
+    {
+        $text = explode(' ', $text);
+        $newstring = "";
+
+        foreach ($text as $word) {
+            if (substr($word, 0, 1) == '@') {
+                $newstring .= "<a href='profile.php?username=" . substr($word, 1) . "'>" . htmlspecialchars($word) . "</a>";
+            } else {
+                $newstring .= htmlspecialchars($word) . " ";
+            }
+        }
+        return $newstring;
+    }
+
     public static function displayPosts($userid, $username, $loggedInUserId)
     {
 
@@ -34,14 +49,14 @@ class Post
         foreach ($dbposts as $p) {
             if (!DB::query('SELECT post_id FROM post_likes WHERE post_id=:postid AND user_id=:userid', array(':postid' => $p['id'], ':userid' => $loggedInUserId))) {
 
-                $posts .= "<img src='" . $p['postimg'] . "'>" . htmlspecialchars($p['body']) . "
+                $posts .= "<img src='" . $p['postimg'] . "'>" . self::linkAdd($p['body']) . "
                 <form action='profile.php?username=$username&postid=" . $p['id'] . "' method='post'>
                 <input type='submit' name='like' value='Like'>
                 <span>" . $p['likes'] . " Likes</span>
                 </form>
                 <hr /> <br />";
             } else {
-                $posts .= "<img src='" . $p['postimg'] . "'>" . htmlspecialchars($p['body']) . "
+                $posts .= "<img src='" . $p['postimg'] . "'>" . self::linkAdd($p['body']) . "
                 <form action='profile.php?username=$username&postid=" . $p['id'] . "' method='post'>
                 <input type='submit' name='unlike' value='Unlike'>
                 <span>" . $p['likes'] . " Likes</span>
