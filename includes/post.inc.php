@@ -29,12 +29,12 @@ class Post
 
     public static function getTopics($text)
     {
-        $text = explode(' ', $text);
+        $text = explode(" ", $text);
         $topics = "";
 
         foreach ($text as $word) {
             if (substr($word, 0, 1) == '#') {
-                $topics .= substr($word, 1) . " ";
+                $topics .= substr($word, 1) . ",";
             }
         }
         return $topics;
@@ -42,7 +42,7 @@ class Post
 
     public static function linkAdd($text)
     {
-        $text = explode(' ', $text);
+        $text = explode(" ", $text);
         $newstring = "";
 
         foreach ($text as $word) {
