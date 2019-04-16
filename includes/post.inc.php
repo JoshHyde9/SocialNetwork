@@ -70,6 +70,11 @@ class Post
                 <form action='profile.php?username=$username&postid=" . $p['id'] . "' method='post'>
                 <input type='submit' name='like' value='Like'>
                 <span>" . $p['likes'] . " Likes</span>
+                ";
+                if ($userid == $loggedInUserId) {
+                    $posts .= "<input type='submit' name='deletepost' value='Delete Post' />";
+                }
+                $posts .= "
                 </form>
                 <hr /> <br />";
             } else {
@@ -77,6 +82,11 @@ class Post
                 <form action='profile.php?username=$username&postid=" . $p['id'] . "' method='post'>
                 <input type='submit' name='unlike' value='Unlike'>
                 <span>" . $p['likes'] . " Likes</span>
+                ";
+                if ($userid == $loggedInUserId) {
+                    $posts .= "<input type='submit' name='deletepost' value='Delete Post' />";
+                }
+                $posts .= "
                 </form>
                 <hr /> <br />";
             }
