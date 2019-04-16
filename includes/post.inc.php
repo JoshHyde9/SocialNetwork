@@ -9,8 +9,8 @@ class Post
 
         $topics = self::getTopics($postbody);
 
-        if (count(self::notify($postbody)) != 0) {
-            foreach (self::notify($postbody) as $key => $n) {
+        if (count(Notify::createNotify($postbody)) != 0) {
+            foreach (Notify::createNotify($postbody) as $key => $n) {
                 $s = $loggedInUserId;
                 $r = DB::query('SELECT id FROM users WHERE username=:username', array(':username' => $key))[0]['id'];
                 if ($r != 0) {
@@ -31,6 +31,7 @@ class Post
         if (!DB::query('SELECT user_id FROM post_likes WHERE post_id=:postid AND user_id=:userid', array(':postid' => $postid, ':userid' => $likerId))) {
             DB::query('UPDATE posts SET likes=likes+1 WHERE id=:postid', array(':postid' => $postid));
             DB::query('INSERT INTO post_likes VALUES (null, :postid, :userid)', array(':postid' => $postid, ':userid' => $likerId));
+            Notify::createNotify("", $postid);
         } else {
             DB::query('UPDATE posts SET likes=likes-1 WHERE id=:postid', array(':postid' => $postid));
             DB::query('DELETE FROM post_likes WHERE post_id=:postid AND user_id=:userid', array('postid' => $postid, ':userid' => $likerId));
@@ -50,20 +51,6 @@ class Post
         return $topics;
     }
 
-    public static function notify($text)
-    {
-
-        $text = explode(" ", $text);
-        $notify = array();
-
-        foreach ($text as $word) {
-            if (substr($word, 0, 1) == '@') {
-                $notify[substr($word, 1)] = array("type" => 1, "extra" => ' { "postbody": "' . htmlentities(implode($text, " ")) . '" }');
-            }
-        }
-        return $notify;
-    }
-
     public static function linkAdd($text)
     {
         $text = explode(" ", $text);
@@ -71,9 +58,9 @@ class Post
 
         foreach ($text as $word) {
             if (substr($word, 0, 1) == '@') {
-                $newstring .= "<a href='profile.php?username=" . substr($word, 1) . "'>" . htmlspecialchars($word) . "</a>";
+                $newstring .= "<a href='profile.php?username=" . substr($word, 1) . "'>" . htmlspecialchars($word) . "</a> ";
             } else if (substr($word, 0, 1) == '#') {
-                $newstring .= "<a href='topics.php?topic=" . substr($word, 1) . "'>" . htmlspecialchars($word) . "</a>";
+                $newstring .= "<a href='topics.php?topic=" . substr($word, 1) . "'>" . htmlspecialchars($word) . "</a> ";
             } else {
                 $newstring .= htmlspecialchars($word) . " ";
             }
@@ -127,8 +114,8 @@ class Post
 
         if ($loggedInUserId == $profileUserId) {
 
-            if (count(self::notify($postbody)) != 0) {
-                foreach (self::notify($postbody) as $key => $n) {
+            if (count(Notify::createNotify($postbody)) != 0) {
+                foreach (Notify::createNotify($postbody) as $key => $n) {
                     $s = $loggedInUserId;
                     $r = DB::query('SELECT id FROM users WHERE username=:username', array(':username' => $key))[0]['id'];
                     if ($r != 0) {

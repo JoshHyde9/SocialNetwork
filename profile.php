@@ -3,6 +3,7 @@ include 'includes/db.inc.php';
 include 'includes/login.inc.php';
 include 'includes/post.inc.php';
 include 'includes/image.inc.php';
+include 'includes/notify.inc.php';
 
 $username = "";
 $verified = false;
