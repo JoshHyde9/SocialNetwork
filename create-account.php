@@ -1,5 +1,6 @@
 <?php
 include 'includes/db.inc.php';
+include 'includes/mail.inc.php';
 
 if (isset($_POST['createaccount'])) {
     $username = $_POST['username'];
@@ -19,7 +20,8 @@ if (isset($_POST['createaccount'])) {
                         if (!DB::query('SELECT email FROM users WHERE email=:email', array(':email' => $email))) {
 
                             DB::query('INSERT INTO users VALUES (null, :username, :password, :email, \'0\', \'\')', array(':username' => $username, ':password' => password_hash($password, PASSWORD_BCRYPT), ':email' => $email));
-                            echo 'Success!';
+                            Mail::sendMail('Welcome to our social network!', 'Your account has been created.', $email);
+                            echo 'Account creation successful!';
                         } else {
                             echo 'Email is already in use!';
                         }
