@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <link rel="stylesheet" href="scss/form.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Permanent+Marker"
+      rel="stylesheet"
+    />
+
+    <title>Login</title>
+  </head>
+
+  <body>
+    <div class="form">
+      <form method="post">
+        <h1>Login</h1>
+        <input
+          type="text"
+          class="txtb"
+          id="username"
+          name="username"
+          placeholder="Username..."
+        />
+        <input
+          type="password"
+          class="txtb"
+          name="password"
+          id="password"
+          placeholder="Password..."
+        />
+        <button type="button" class="submit-btn" id="login" name="login">
+          Login
+        </button>
+        <a href="signup.html">Don't have an account? Sign up!</a>
+      </form>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.4.0.js"
+      integrity="sha256-DYZMCC8HTC+QDr5QNaIcfR7VSPtcISykd+6eSmBW5qo="
+      crossorigin="anonymous"
+    ></script>
+    <script type="text/javascript">
+      $("#login").click(function() {
+        $.ajax({
+          type: "POST",
+          url: "api/auth",
+          processData: false,
+          contentType: "application/json",
+          data:
+            '{ "username": "' +
+            $("#username").val() +
+            '", "password": "' +
+            $("#password").val() +
+            '" }',
+          success: function(r) {
+            console.log(r);
+          },
+          error: function(r) {
+            console.log(r);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
